@@ -40,6 +40,16 @@ You can add as many fortunes as you'd like. Edit the file while the server is ru
 2. Install [Fabric API](https://modrinth.com/mod/fabric-api)
 3. Drop the Fortune mod `.jar` into your server's `mods/` folder
 
+## 🌐 Try It Live
+
+You can test the mod in-game on this public Minecraft server:
+
+```
+netherhood.blockworlds.io
+```
+
+Join and receive a random fortune on login — no mods required.
+
 ## 🔗 Links
 
 - 🔮 [Modrinth Page](https://modrinth.com/mod/fortune)
