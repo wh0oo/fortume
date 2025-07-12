@@ -1,26 +1,56 @@
-# Fortune
+# 🥠 Fortune
 
-A lightweight Fabric mod that gives players a random "fortune" message when they join the server — just like the classic `fortune` command on Linux.
+A lightweight Fabric mod that gives players a random fortune whenever they log in — inspired by the classic Linux `fortune` command.
 
-## Features
+## ✨ Features
 
-- Sends a fortune to players on login
-- Fortune messages are currently selected from a built-in list
-- No commands or config needed (yet)
+- Shows a random fortune when players join the server
+- Fully customizable: edit `fortunes.json` in the config folder
+- Reload fortunes in-game with `/fortune reload`
+- Server-side only — no need for players to install anything
 
-## Planned Features
+## 📂 Configuration
 
-- Configurable fortune files stored in the `config/fortune/` folder
-- Optional once-per-day random rewards
-- Support for multiple fortune categories
-- Customization via JSON
+Fortunes are stored in a simple JSON file:
 
-## Installation
+```json
+[
+  "Beware the sheep that watches you sleep.",
+  "Your next jump will change everything."
+]
+```
 
-1. Install [Fabric Loader](https://fabricmc.net/) and [Fabric API](https://modrinth.com/mod/fabric-api)
-2. Drop the latest release of this mod into your `mods` folder
-3. Launch the game or server
+Place this file at:
 
-## License
+```
+config/fortune/fortunes.json
+```
 
-MIT © wh0oo
+You can add as many fortunes as you'd like. Edit the file while the server is running, then use:
+
+```mc
+/fortune reload
+```
+
+...to refresh the list without restarting.
+
+## 📦 Installation
+
+1. Install [Fabric Loader](https://fabricmc.net/)
+2. Install [Fabric API](https://modrinth.com/mod/fabric-api)
+3. Drop the Fortune mod `.jar` into your server's `mods/` folder
+
+## 🌐 Try It Live
+
+You can test the mod in-game on this public Minecraft server:
+
+```
+netherhood.blockworlds.io
+```
+
+Join and receive a random fortune on login — no mods required.
+
+## 🔗 Links
+
+- 🔮 [Modrinth Page](https://modrinth.com/mod/fortune)
+- 💻 [GitHub Repo](https://github.com/wh0oo/fortune)
