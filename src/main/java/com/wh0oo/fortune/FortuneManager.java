@@ -1,4 +1,4 @@
-package com.wh0oo.fortume;
+package com.wh0oo.fortune;
 
 import java.util.List;
 import java.util.Random;
