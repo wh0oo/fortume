@@ -13,6 +13,9 @@ public class FortuneMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        // Load fortunes from config file
+        FortuneManager.loadFortunes();
+
         // Send a random fortune on player join
         ServerPlayConnectionEvents.JOIN.register((ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) -> {
             ServerPlayerEntity player = handler.getPlayer();
