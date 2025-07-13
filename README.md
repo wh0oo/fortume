@@ -1,4 +1,4 @@
-# 🥠 Fortune
+# 📟 Fortune
 
 A lightweight Fabric mod for Minecraft that gives players a random fortune whenever they log in — inspired by the classic Linux `fortune` command.
 
