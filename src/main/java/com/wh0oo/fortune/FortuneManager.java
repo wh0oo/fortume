@@ -70,4 +70,3 @@ public class FortuneManager {
         }
         return loadedFortunes.get(RANDOM.nextInt(loadedFortunes.size()));
     }
-}
