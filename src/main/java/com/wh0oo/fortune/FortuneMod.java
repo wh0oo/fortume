@@ -39,8 +39,8 @@ public class FortuneMod implements ModInitializer {
                 literal("fortune")
                     .then(
                         literal("reload")
-                            // Mojang mappings 1.21.11: hasPermissionLevel(int)
-                            .requires(source -> source.hasPermissionLevel(2))
+                            // Mojang mappings: correct method
+                            .requires(source -> source.hasPermission(2))
                             .executes(context -> {
                                 FortuneManager.loadFortunes();
                                 CommandSourceStack source = context.getSource();
