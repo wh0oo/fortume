@@ -1,3 +1,4 @@
+// minecraft mappings 1.21.11
 package com.wh0oo.fortune;
 
 import net.fabricmc.api.ModInitializer;
@@ -21,24 +22,35 @@ public class FortuneMod implements ModInitializer {
         FortuneManager.loadFortunes();
 
         // Register player join event
-        ServerPlayConnectionEvents.JOIN.register((ServerGamePacketListenerImpl handler, PacketSender sender, MinecraftServer server) -> {
-            ServerPlayer player = handler.getPlayer();
-            String fortune = FortuneManager.getRandomFortune();
-            player.displayClientMessage(Component.literal("§6Fortune: §r" + fortune), false);
-        });
+        ServerPlayConnectionEvents.JOIN.register(
+            (ServerGamePacketListenerImpl handler, PacketSender sender, MinecraftServer server) -> {
+                ServerPlayer player = handler.getPlayer();
+                String fortune = FortuneManager.getRandomFortune();
+                player.displayClientMessage(
+                    Component.literal("§6Fortune: §r" + fortune),
+                    false
+                );
+            }
+        );
 
         // Register /fortune reload command
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            dispatcher.register(literal("fortune")
-                .then(literal("reload")
-                    .requires(source -> source.hasPermission(2)) // level 2 = operator
-                    .executes(context -> {
-                        FortuneManager.loadFortunes();
-                        CommandSourceStack source = context.getSource();
-                        source.sendSuccess(() -> Component.literal("§aFortunes reloaded."), true);
-                        return 1;
-                    })
-                )
+            dispatcher.register(
+                literal("fortune")
+                    .then(
+                        literal("reload")
+                            // Mojang mappings 1.21.11: hasPermissionLevel(int)
+                            .requires(source -> source.hasPermissionLevel(2))
+                            .executes(context -> {
+                                FortuneManager.loadFortunes();
+                                CommandSourceStack source = context.getSource();
+                                source.sendSuccess(
+                                    () -> Component.literal("§aFortunes reloaded."),
+                                    true
+                                );
+                                return 1;
+                            })
+                    )
             );
         });
     }
