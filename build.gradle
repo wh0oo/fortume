@@ -1,10 +1,13 @@
+// minecraft mappings 1.21.11
+
 plugins {
-    id "fabric-loom" version "1.11.8"
+    id "fabric-loom" version "1.14.6"
     id "maven-publish"
 }
 
 group = project.maven_group
 version = project.mod_version
+
 base {
     archivesName = project.archives_base_name
 }
@@ -12,17 +15,17 @@ base {
 repositories {
     mavenCentral()
     maven { url = "https://maven.fabricmc.net/" }
-    maven { url = "https://maven.terraformersmc.com/releases/" } // optional, safe to keep
+    maven { url = "https://maven.terraformersmc.com/releases/" }
 }
 
 dependencies {
-    // Core game + mappings
+    
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings "net.fabricmc:yarn:${yarn_mappings}:v2"
+    mappings loom.officialMojangMappings()
 
-    // Fabric loader + API
+    
     modImplementation "net.fabricmc:fabric-loader:${loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 }
 
 java {
@@ -45,7 +48,7 @@ processResources {
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${base.archivesName.get()}" }
+        rename { "${it}_${project.archives_base_name}" }
     }
 }
 
@@ -56,6 +59,6 @@ publishing {
         }
     }
     repositories {
-        // add your target if you publish
+        
     }
 }
