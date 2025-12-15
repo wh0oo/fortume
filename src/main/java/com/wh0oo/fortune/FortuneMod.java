@@ -14,14 +14,11 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import static net.minecraft.commands.Commands.literal;
 
 public class FortuneMod implements ModInitializer {
-    public static final String MOD_ID = "fortune";
 
     @Override
     public void onInitialize() {
-        // Load fortunes from config file at startup
         FortuneManager.loadFortunes();
 
-        // Register player join event
         ServerPlayConnectionEvents.JOIN.register(
             (ServerGamePacketListenerImpl handler, PacketSender sender, MinecraftServer server) -> {
                 ServerPlayer player = handler.getPlayer();
@@ -33,18 +30,21 @@ public class FortuneMod implements ModInitializer {
             }
         );
 
-        // Register /fortune reload command
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(
                 literal("fortune")
                     .then(
                         literal("reload")
-                            // Mojang mappings: correct method
-                            .requires(source -> source.hasPermission(2))
+                            .requires(source ->
+                                source.getPlayer() == null
+                                || source.getServer()
+                                         .getProfilePermissions(
+                                             source.getPlayer().getGameProfile()
+                                         ) >= 2
+                            )
                             .executes(context -> {
                                 FortuneManager.loadFortunes();
-                                CommandSourceStack source = context.getSource();
-                                source.sendSuccess(
+                                context.getSource().sendSuccess(
                                     () -> Component.literal("§aFortunes reloaded."),
                                     true
                                 );
