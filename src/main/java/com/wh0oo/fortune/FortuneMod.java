@@ -5,7 +5,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -20,10 +19,10 @@ public class FortuneMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        // Load fortunes at startup
+        // Load fortunes from config file at startup
         FortuneManager.loadFortunes();
 
-        // Player join message
+        // Send fortune on player join
         ServerPlayConnectionEvents.JOIN.register(
             (ServerGamePacketListenerImpl handler, PacketSender sender, MinecraftServer server) -> {
                 ServerPlayer player = handler.getPlayer();
@@ -35,16 +34,17 @@ public class FortuneMod implements ModInitializer {
             }
         );
 
-        // /fortune reload command
+        // Register /fortune reload (ops only, hidden from non-ops)
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(
                 literal("fortune")
+                    .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                     .then(
                         literal("reload")
-                            .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                             .executes(context -> {
                                 FortuneManager.loadFortunes();
-                                context.getSource().sendSuccess(
+                                CommandSourceStack source = context.getSource();
+                                source.sendSuccess(
                                     () -> Component.literal("§aFortunes reloaded."),
                                     true
                                 );
