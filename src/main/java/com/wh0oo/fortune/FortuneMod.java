@@ -1,10 +1,10 @@
-// minecraft mappings 1.21.11
+// minecraft 26.1.2
 package com.wh0oo.fortune;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -27,9 +27,9 @@ public class FortuneMod implements ModInitializer {
             (ServerGamePacketListenerImpl handler, PacketSender sender, MinecraftServer server) -> {
                 ServerPlayer player = handler.getPlayer();
                 String fortune = FortuneManager.getRandomFortune();
-                player.displayClientMessage(
-                    Component.literal("§6Fortune: §r" + fortune),
-                    false
+
+                player.sendSystemMessage(
+                    Component.literal("§6Fortune: §r" + fortune)
                 );
             }
         );

@@ -1,7 +1,5 @@
-// minecraft mappings 1.21.11
-
 plugins {
-    id "fabric-loom" version "1.14.6"
+    id "net.fabricmc.fabric-loom" version "${loom_version}"
     id "maven-publish"
 }
 
@@ -19,24 +17,21 @@ repositories {
 }
 
 dependencies {
-    
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.officialMojangMappings()
 
-    
-    modImplementation "net.fabricmc:fabric-loader:${loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    implementation "net.fabricmc:fabric-loader:${loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 }
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(25)
     }
     withSourcesJar()
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.release = 21
+    options.release = 25
 }
 
 processResources {
@@ -59,6 +54,5 @@ publishing {
         }
     }
     repositories {
-        
     }
 }

@@ -1,20 +1,20 @@
 package com.wh0oo.fortune;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
+import net.fabricmc.loader.api.FabricLoader;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import net.fabricmc.loader.api.FabricLoader;
 
 public class FortuneManager {
     private static final Random RANDOM = new Random();
@@ -34,33 +34,49 @@ public class FortuneManager {
     private static List<String> loadedFortunes = new ArrayList<>(DEFAULT_FORTUNES);
 
     public static void loadFortunes() {
-        Path configDir = FabricLoader.getInstance().getConfigDir();
-        File file = configDir.resolve("fortune").resolve(CONFIG_FILE).toFile();
+        Path configDir = FabricLoader.getInstance().getConfigDir().resolve("fortune");
+        Path file = configDir.resolve(CONFIG_FILE);
 
-        if (!file.exists()) {
+        if (!Files.exists(file)) {
+            loadedFortunes = new ArrayList<>(DEFAULT_FORTUNES);
+
             try {
-                file.getParentFile().mkdirs();
-                try (FileWriter writer = new FileWriter(file)) {
+                Files.createDirectories(configDir);
+
+                try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
                     GSON.toJson(DEFAULT_FORTUNES, writer);
                 }
+
                 System.out.println("[Fortune] Created default fortunes.json");
             } catch (IOException e) {
                 System.err.println("[Fortune] Failed to create default config: " + e.getMessage());
             }
+
             return;
         }
 
-        try (FileReader reader = new FileReader(file)) {
+        try (Reader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
             Type listType = new TypeToken<List<String>>() {}.getType();
             List<String> fortunes = GSON.fromJson(reader, listType);
-            if (fortunes != null && !fortunes.isEmpty()) {
-                loadedFortunes = fortunes;
-                System.out.println("[Fortune] Loaded " + loadedFortunes.size() + " custom fortunes.");
-            } else {
-                System.out.println("[Fortune] fortunes.json was empty or invalid. Using defaults.");
+
+            if (fortunes != null) {
+                List<String> cleanedFortunes = fortunes.stream()
+                    .filter(fortune -> fortune != null && !fortune.isBlank())
+                    .toList();
+
+                if (!cleanedFortunes.isEmpty()) {
+                    loadedFortunes = new ArrayList<>(cleanedFortunes);
+                    System.out.println("[Fortune] Loaded " + loadedFortunes.size() + " custom fortunes.");
+                    return;
+                }
             }
+
+            loadedFortunes = new ArrayList<>(DEFAULT_FORTUNES);
+            System.out.println("[Fortune] fortunes.json was empty or invalid. Using defaults.");
         } catch (IOException | JsonSyntaxException e) {
+            loadedFortunes = new ArrayList<>(DEFAULT_FORTUNES);
             System.err.println("[Fortune] Failed to read fortunes.json: " + e.getMessage());
+            System.err.println("[Fortune] Using default fortunes.");
         }
     }
 
@@ -68,6 +84,7 @@ public class FortuneManager {
         if (loadedFortunes.isEmpty()) {
             return "[No fortunes found]";
         }
+
         return loadedFortunes.get(RANDOM.nextInt(loadedFortunes.size()));
     }
 }
